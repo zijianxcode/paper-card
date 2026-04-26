@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Paper Card: Attention Is All You Need</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #FAFAF8;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #1A1A1A;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 48px 24px 60px;
+  }
+
+  /* ---------- Title ---------- */
+  .title-section {
+    margin-bottom: 40px;
+  }
+  .title-main {
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1A1A1A;
+    letter-spacing: 0.02em;
+  }
+  .title-meta {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #5A5A5A;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .tag {
+    display: inline-block;
+    background: #ECE9E0;
+    color: #5A5A5A;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+  }
+  .tag-accent {
+    background: #2C3E50;
+    color: #FAFAF8;
+  }
+
+  /* ---------- section ---------- */
+  .section {
+    margin-bottom: 36px;
+  }
+  .section-title {
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1A1A1A;
+    margin-bottom: 14px;
+    border-left: 3px solid #2C3E50;
+    padding-left: 10px;
+  }
+  .section p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #1A1A1A;
+    margin-bottom: 12px;
+  }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* ---------- highlight box ---------- */
+  .highlight-box {
+    background: #F3F2EE;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1A1A1A;
+    border-left: 3px solid #2C3E50;
+  }
+  .highlight-box strong {
+    color: #2C3E50;
+  }
+
+  /* ---------- diagram ---------- */
+  .diagram-wrapper {
+    background: #FFFFFF;
+    border: 1px solid #E8E6E1;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .diagram-wrapper svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .diagram-caption {
+    font-size: 12px;
+    color: #8A8A8A;
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ---------- bullet list ---------- */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 12px;
+  }
+  .bullet-list li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #1A1A1A;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .bullet-list li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #2C3E50;
+  }
+  .bullet-list li:last-child { margin-bottom: 0; }
+
+  /* ---------- inline innovation card ---------- */
+  .innovation-item {
+    border-bottom: 1px solid #E8E6E1;
+    padding: 12px 0;
+  }
+  .innovation-item:first-of-type { padding-top: 0; }
+  .innovation-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+  .innovation-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #2C3E50;
+    margin-bottom: 2px;
+  }
+  .innovation-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #3A3A3A;
+  }
+
+  /* ---------- results table ---------- */
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .results-table th {
+    text-align: left;
+    font-weight: 600;
+    color: #5A5A5A;
+    padding: 8px 6px 6px 6px;
+    border-bottom: 1.5px solid #E8E6E1;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .results-table td {
+    padding: 8px 6px;
+    border-bottom: 1px solid #E8E6E1;
+    vertical-align: top;
+    font-size: 14px;
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table .num {
+    font-weight: 600;
+    color: #2C3E50;
+    font-variant-numeric: tabular-nums;
+    font-size: 15px;
+  }
+  .results-table .num-em {
+    font-weight: 700;
+    color: #2C3E50;
+    font-size: 16px;
+  }
+
+  /* ---------- insight block ---------- */
+  .insight-block {
+    margin-bottom: 16px;
+  }
+  .insight-block:last-child { margin-bottom: 0; }
+  .insight-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #8B4513;
+    margin-bottom: 4px;
+  }
+  .insight-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .insight-block ul li {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #3A3A3A;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 4px;
+  }
+  .insight-block ul li::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: #8B4513;
+  }
+
+  /* ---------- paper info card ---------- */
+  .info-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E6E1;
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .info-row {
+    display: flex;
+    padding: 5px 0;
+    border-bottom: 1px solid #F0EFEA;
+    font-size: 13px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label {
+    color: #8A8A8A;
+    width: 58px;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .info-value {
+    color: #1A1A1A;
+    flex: 1;
+    line-height: 1.5;
+  }
+  .info-value a {
+    color: #2C3E50;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .info-value a:hover { text-decoration: underline; }
+
+  /* ---------- divider ---------- */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #E8E6E1;
+    margin: 32px 0;
+  }
+
+  /* ---------- footer ---------- */
+  .footer-note {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 11px;
+    color: #B0AFA8;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ====== 模块 1：标题区 ====== -->
+  <div class="title-section">
+    <div class="title-main">
+      抛弃 RNN 和 CNN，只用注意力<br>
+      ——2017 年的这个决定<br>
+      重塑了整个 AI 领域
+    </div>
+    <div class="title-meta">
+      <span class="tag tag-accent">NeurIPS 2017</span>
+      <span class="tag">Google Brain</span>
+      <span class="tag">被引 130,000+</span>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== 模块 2：为什么该关心 ====== -->
+  <div class="section">
+    <div class="section-title">为什么该关心</div>
+    <p>2017 年之前，处理语言、翻译、语音这些序列数据，几乎离不开循环神经网络（RNN/LSTM）。</p>
+    <p>但 RNN 有一个根本问题：<strong>它是顺序计算的。</strong>处理第 t 个词必须等前 t-1 个算完。长序列上，这既是速度瓶颈，也让远距离依赖难以捕捉。注意力机制（Attention）已经被用来缓解这个问题，但它始终只是 RNN 的附加组件，不是替代品。</p>
+    <p>这篇论文问了一个在当时看来近乎激进的问题：<strong>如果彻底扔掉 RNN 和 CNN，仅仅靠注意力机制，能不能做得更好？</strong></p>
+    <p>答案是不仅能，而且好得多。这个架构就是 <strong>Transformer</strong>。</p>
+
+    <!-- Diagram 1: RNN vs Transformer -->
+    <div class="diagram-wrapper">
+      <svg viewBox="0 0 370 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left panel: RNN -->
+        <rect x="0" y="0" width="175" height="195" rx="6" fill="#F5F5F3" stroke="#E0DDD6" stroke-width="1"/>
+        <text x="87" y="22" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="600" fill="#5A5A5A">传统 RNN</text>
+        <text x="87" y="180" text-anchor="middle" font-size="10" fill="#8A8A8A">顺序处理，第 t 步必须等前 t-1 步完成</text>
+
+        <!-- 4 nodes in chain -->
+        <rect x="25" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
+        <text x="39" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₁</text>
+
+        <line x1="58" y1="59" x2="70" y2="59" stroke="#B8B5AD" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+        <rect x="75" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
+        <text x="89" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₂</text>
+
+        <line x1="108" y1="59" x2="120" y2="59" stroke="#B8B5AD" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+        <rect x="125" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
+        <text x="139" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₃</text>
+
+        <!-- Sequential arrows below -->
+        <text x="87" y="115" text-anchor="middle" font-size="9" fill="#8A8A8A">↓ 每个词独立，不能并行</text>
+        <text x="87" y="132" text-anchor="middle" font-size="9" fill="#8A8A8A">↓ 长距离依赖（>10 词）容易丢失</text>
+        <text x="87" y="149" text-anchor="middle" font-size="9" fill="#8A8A8A">复杂度：O(n) 步串行</text>
+
+        <!-- Divider -->
+        <line x1="183" y1="10" x2="183" y2="185" stroke="#E0DDD6" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- Right panel: Transformer -->
+        <rect x="190" y="0" width="175" height="195" rx="6" fill="#F3F6FA" stroke="#2C3E50" stroke-width="1"/>
+        <text x="277" y="22" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="600" fill="#2C3E50">Transformer</text>
+        <text x="277" y="180" text-anchor="middle" font-size="10" fill="#5A5A5A">全局注意力，所有位置同时计算</text>
+
+        <!-- 4 nodes -->
+        <rect x="215" y="45" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
+        <text x="229" y="63" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₁</text>
+
+        <rect x="265" y="45" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
+        <text x="279" y="63" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₂</text>
+
+        <rect x="215" y="95" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
+        <text x="229" y="113" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₃</text>
+
+        <rect x="265" y="95" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
+        <text x="279" y="113" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₄</text>
+
+        <!-- Attention connections (curved lines) -->
+        <!-- x₁ → all -->
+        <path d="M243,59 Q260,35 279,59" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M243,59 Q255,77 229,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M243,59 Q260,83 279,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <!-- x₂ → all -->
+        <path d="M293,59 Q275,35 243,59" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M293,59 Q275,83 229,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M293,59 Q285,77 279,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <!-- x₃ → others -->
+        <path d="M243,109 Q260,83 279,109" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M243,109 Q260,87 293,59" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M243,109 Q255,95 229,63" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <!-- x₄ → others -->
+        <path d="M293,109 Q275,83 229,109" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M293,109 Q275,87 243,59" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <path d="M293,109 Q285,95 279,63" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+        <text x="277" y="148" text-anchor="middle" font-size="9" fill="#2C3E50">↓ 任意两个位置直接关联</text>
+        <text x="277" y="163" text-anchor="middle" font-size="9" fill="#2C3E50">↓ 复杂度：O(1) 步并行</text>
+
+        <defs>
+          <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#B8B5AD"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="diagram-caption">RNN 的顺序计算 vs. Transformer 的并行自注意力——这是 Transformer 一切优势的起点</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== 模块 3：他们是怎么做的 ====== -->
+  <div class="section">
+    <div class="section-title">他们是怎么做的</div>
+    <p>Transformer 的架构是一个 encoder-decoder 结构，但内部完全没有 RNN 或 CNN——全凭注意力机制。</p>
+
+    <div class="innovation-item">
+      <div class="innovation-label">一、Scaled Dot-Product Attention（缩放点积注意力）</div>
+      <div class="innovation-desc">把 query 和 key 做点积计算相似度，除以 √dₖ 防止维度增大时梯度消失，softmax 归一化后加权 value。简单说就是：<strong>让每个词"看"一遍所有其他词，决定谁更重要。</strong></div>
+    </div>
+
+    <!-- Diagram 2: Self-Attention -->
+    <div class="diagram-wrapper" style="margin-top: 12px;">
+      <svg viewBox="0 0 320 175" xmlns="http://www.w3.org/2000/svg">
+        <!-- Q K V boxes at top -->
+        <rect x="35" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
+        <text x="65" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Query</text>
+
+        <rect x="130" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
+        <text x="160" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Key</text>
+
+        <rect x="225" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
+        <text x="255" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Value</text>
+
+        <text x="65" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"我在找什么"</text>
+        <text x="160" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"我有什么"</text>
+        <text x="255" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"实际内容"</text>
+
+        <!-- Arrow down from Q and K to MatMul -->
+        <line x1="65" y1="36" x2="65" y2="70" stroke="#8B4513" stroke-width="1.2"/>
+        <line x1="160" y1="36" x2="160" y2="70" stroke="#8B4513" stroke-width="1.2"/>
+        <line x1="255" y1="36" x2="255" y2="80" stroke="#8B4513" stroke-width="1.2"/>
+
+        <!-- MatMul box -->
+        <rect x="75" y="70" width="70" height="24" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="1"/>
+        <text x="110" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">Q·Kᵀ</text>
+
+        <!-- Scale -->
+        <line x1="110" y1="94" x2="110" y2="108" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="78" y="108" width="64" height="20" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="0.8"/>
+        <text x="110" y="122" text-anchor="middle" font-size="9" fill="#2C3E50">÷√dₖ</text>
+
+        <!-- SoftMax -->
+        <line x1="110" y1="128" x2="110" y2="138" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="78" y="138" width="64" height="20" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="0.8"/>
+        <text x="110" y="152" text-anchor="middle" font-size="9" fill="#2C3E50">Softmax</text>
+
+        <!-- Arrow from V to multiply -->
+        <line x1="255" y1="80" x2="255" y2="140" stroke="#8B4513" stroke-width="1"/>
+        <line x1="255" y1="140" x2="195" y2="140" stroke="#8B4513" stroke-width="1"/>
+        <line x1="195" y1="140" x2="195" y2="158" stroke="#8B4513" stroke-width="1"/>
+
+        <!-- Arrow from Softmax to multiply -->
+        <line x1="142" y1="148" x2="175" y2="148" stroke="#2C3E50" stroke-width="1"/>
+        <line x1="175" y1="148" x2="175" y2="158" stroke="#2C3E50" stroke-width="1"/>
+
+        <!-- MatMul (weights × V) -->
+        <rect x="155" y="158" width="64" height="20" rx="3" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1.2"/>
+        <text x="187" y="172" text-anchor="middle" font-size="9" font-weight="600" fill="#2C3E50">加权求和</text>
+
+        <defs>
+          <marker id="arrow-brown" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#8B4513"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="diagram-caption">缩放点积注意力的计算流程：Q 与 K 匹配得到权重，加权 V 输出</div>
+    </div>
+
+    <div class="innovation-item">
+      <div class="innovation-label">二、Multi-Head Attention（多头注意力）</div>
+      <div class="innovation-desc">不做一次注意力，而是把 Q/K/V 投影到 8 个不同的低维子空间，并行做 8 次注意力，再把结果拼接起来。<strong>每个头关注不同的关系模式（语法、语义、位置……），拼在一起就是完整的理解。</strong></div>
+    </div>
+
+    <div class="innovation-item">
+      <div class="innovation-label">三、Positional Encoding（位置编码）</div>
+      <div class="innovation-desc">没有 RNN 的序列结构，模型需要显式知道词的先后顺序。用不同频率的正余弦波给每个位置编码，加到输入里。<strong>位置信息不是"学出来的"，而是用数学公式算好注入的。</strong></div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== 模块 4：结果怎么样 ====== -->
+  <div class="section">
+    <div class="section-title">结果怎么样</div>
+
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>任务</th>
+          <th>指标</th>
+          <th>结果</th>
+          <th>意义</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>WMT 2014<br>英→德</td>
+          <td>BLEU</td>
+          <td><span class="num-em">28.4</span></td>
+          <td>超过此前所有模型（含集成模型）2 个 BLEU</td>
+        </tr>
+        <tr>
+          <td>WMT 2014<br>英→法</td>
+          <td>BLEU</td>
+          <td><span class="num-em">41.8</span></td>
+          <td>单模型 SOTA，训练仅需 3.5 天（8 张 GPU）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      更关键的是效率：自注意力每层计算只需 <strong>O(1) 步</strong>（并行），RNN 需要 O(n) 步（串行）。长距离依赖的路径长度也是常数 <strong>O(1)</strong>，不像 RNN 是 O(n)、CNN 是 O(log<sub>k</sub>(n))。
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== 模块 5：局限和启发 ====== -->
+  <div class="section">
+    <div class="section-title">局限和启发</div>
+
+    <div class="insight-block">
+      <div class="insight-label">局限</div>
+      <ul>
+        <li>自注意力的计算复杂度是 O(n²·d)——序列越长，计算量和内存开销呈平方增长（这直接催生了后来的 Longformer、Linformer、稀疏注意力等工作）</li>
+        <li>没有 RNN 式的隐状态，失去了"在线处理"的自然性质</li>
+      </ul>
+    </div>
+
+    <div class="insight-block">
+      <div class="insight-label">启发</div>
+      <ul>
+        <li>Transformer 证明了"简单架构 + 大规模数据 + 并行计算"是一条可规模化的道路</li>
+        <li>后续 BERT、GPT 系列、ViT 等里程碑工作，全部直接站在这个地基上</li>
+        <li>可以说，2017–2025 的 AI 发展史，很大程度上是在消化这篇论文的洞见</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== 模块 6：论文速览卡片 ====== -->
+  <div class="section">
+    <div class="section-title">论文速览</div>
+    <div class="info-card">
+      <div class="info-row">
+        <span class="info-label">论文标题</span>
+        <span class="info-value">Attention Is All You Need</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">作者</span>
+        <span class="info-value">Vaswani et al.（8 位共同一作，顺序随机）</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">单位</span>
+        <span class="info-value">Google Brain / Google Research / University of Toronto</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">发表</span>
+        <span class="info-value">NeurIPS 2017（NIPS 2017）</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">关键词</span>
+        <span class="info-value">Transformer, Self-Attention, Sequence-to-Sequence, Machine Translation</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">链接</span>
+        <span class="info-value"><a href="https://arxiv.org/abs/1706.03762">https://arxiv.org/abs/1706.03762</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Paper Card · paper-card.pages.dev
+  </div>
+
+</div>
+</body>
+</html>
