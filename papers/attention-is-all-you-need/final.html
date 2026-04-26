@@ -303,78 +303,118 @@
 
     <!-- Diagram 1: RNN vs Transformer -->
     <div class="diagram-wrapper">
-      <svg viewBox="0 0 370 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Left panel: RNN -->
-        <rect x="0" y="0" width="175" height="195" rx="6" fill="#F5F5F3" stroke="#E0DDD6" stroke-width="1"/>
-        <text x="87" y="22" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="600" fill="#5A5A5A">传统 RNN</text>
-        <text x="87" y="180" text-anchor="middle" font-size="10" fill="#8A8A8A">顺序处理，第 t 步必须等前 t-1 步完成</text>
-
-        <!-- 4 nodes in chain -->
-        <rect x="25" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
-        <text x="39" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₁</text>
-
-        <line x1="58" y1="59" x2="70" y2="59" stroke="#B8B5AD" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
-
-        <rect x="75" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
-        <text x="89" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₂</text>
-
-        <line x1="108" y1="59" x2="120" y2="59" stroke="#B8B5AD" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
-
-        <rect x="125" y="45" width="28" height="28" rx="5" fill="#D5D3CC" stroke="#B8B5AD" stroke-width="1"/>
-        <text x="139" y="63" text-anchor="middle" font-size="10" fill="#5A5A5A" font-weight="500">x₃</text>
-
-        <!-- Sequential arrows below -->
-        <text x="87" y="115" text-anchor="middle" font-size="9" fill="#8A8A8A">↓ 每个词独立，不能并行</text>
-        <text x="87" y="132" text-anchor="middle" font-size="9" fill="#8A8A8A">↓ 长距离依赖（>10 词）容易丢失</text>
-        <text x="87" y="149" text-anchor="middle" font-size="9" fill="#8A8A8A">复杂度：O(n) 步串行</text>
-
-        <!-- Divider -->
-        <line x1="183" y1="10" x2="183" y2="185" stroke="#E0DDD6" stroke-width="1" stroke-dasharray="4,3"/>
-
-        <!-- Right panel: Transformer -->
-        <rect x="190" y="0" width="175" height="195" rx="6" fill="#F3F6FA" stroke="#2C3E50" stroke-width="1"/>
-        <text x="277" y="22" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="600" fill="#2C3E50">Transformer</text>
-        <text x="277" y="180" text-anchor="middle" font-size="10" fill="#5A5A5A">全局注意力，所有位置同时计算</text>
-
-        <!-- 4 nodes -->
-        <rect x="215" y="45" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
-        <text x="229" y="63" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₁</text>
-
-        <rect x="265" y="45" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
-        <text x="279" y="63" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₂</text>
-
-        <rect x="215" y="95" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
-        <text x="229" y="113" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₃</text>
-
-        <rect x="265" y="95" width="28" height="28" rx="5" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1"/>
-        <text x="279" y="113" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="500">x₄</text>
-
-        <!-- Attention connections (curved lines) -->
-        <!-- x₁ → all -->
-        <path d="M243,59 Q260,35 279,59" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M243,59 Q255,77 229,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M243,59 Q260,83 279,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <!-- x₂ → all -->
-        <path d="M293,59 Q275,35 243,59" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M293,59 Q275,83 229,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M293,59 Q285,77 279,109" fill="none" stroke="#8B9EB5" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <!-- x₃ → others -->
-        <path d="M243,109 Q260,83 279,109" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M243,109 Q260,87 293,59" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M243,109 Q255,95 229,63" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <!-- x₄ → others -->
-        <path d="M293,109 Q275,83 229,109" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M293,109 Q275,87 243,59" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-        <path d="M293,109 Q285,95 279,63" fill="none" stroke="#2C3E50" stroke-width="0.8" stroke-dasharray="3,2"/>
-
-        <text x="277" y="148" text-anchor="middle" font-size="9" fill="#2C3E50">↓ 任意两个位置直接关联</text>
-        <text x="277" y="163" text-anchor="middle" font-size="9" fill="#2C3E50">↓ 复杂度：O(1) 步并行</text>
-
+      <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#B8B5AD"/>
+          <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,1 L8,5 L0,9 Z" fill="#9A9690"/>
+          </marker>
+          <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,1 L8,5 L0,9 Z" fill="#2C3E50"/>
           </marker>
         </defs>
+
+        <!-- ===== Left Panel: RNN ===== -->
+        <rect x="4" y="0" width="172" height="320" rx="8" fill="#F8F7F4"/>
+        <rect x="4" y="0" width="172" height="320" rx="8" fill="none" stroke="#E6E4DD" stroke-width="1"/>
+        <text x="90" y="30" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#4A4A4A">传统 RNN / LSTM</text>
+
+        <!-- 4 nodes in chain -->
+        <circle cx="34" cy="68" r="17" fill="#EDEBE5" stroke="#B5B1A5" stroke-width="2"/>
+        <text x="34" y="72" text-anchor="middle" font-size="12" font-weight="600" fill="#4A4A4A">x₁</text>
+
+        <line x1="54" y1="68" x2="72" y2="68" stroke="#B5B1A5" stroke-width="2.2" marker-end="url(#ag)"/>
+
+        <circle cx="94" cy="68" r="17" fill="#EDEBE5" stroke="#B5B1A5" stroke-width="2"/>
+        <text x="94" y="72" text-anchor="middle" font-size="12" font-weight="600" fill="#4A4A4A">x₂</text>
+
+        <line x1="114" y1="68" x2="132" y2="68" stroke="#B5B1A5" stroke-width="2.2" marker-end="url(#ag)"/>
+
+        <circle cx="152" cy="68" r="17" fill="#EDEBE5" stroke="#B5B1A5" stroke-width="2"/>
+        <text x="152" y="72" text-anchor="middle" font-size="12" font-weight="600" fill="#4A4A4A">x₃</text>
+
+        <!-- Hidden state flow -->
+        <path d="M34,87 Q62,105 94,95" fill="none" stroke="#B5B1A5" stroke-width="1.3" stroke-dasharray="5,3"/>
+        <path d="M94,95 Q126,85 152,100" fill="none" stroke="#B5B1A5" stroke-width="1.3" stroke-dasharray="5,3"/>
+        <text x="93" y="115" text-anchor="middle" font-size="9.5" fill="#9A9690">隐状态串行传递</text>
+
+        <!-- Time axis -->
+        <line x1="18" y1="132" x2="168" y2="132" stroke="#D8D4CC" stroke-width="1"/>
+        <polygon points="168,132 162,129 162,135" fill="#D8D4CC"/>
+        <text x="93" y="146" text-anchor="middle" font-size="9.5" fill="#8A8A8A">时间 →</text>
+
+        <!-- Key points -->
+        <text x="90" y="172" text-anchor="middle" font-size="11" fill="#5A5A5A">顺序执行，不能并行</text>
+        <text x="90" y="196" text-anchor="middle" font-size="11" fill="#5A5A5A">路径复杂度 <tspan font-weight="700" fill="#3A3A3A">O(n)</tspan></text>
+        <text x="90" y="220" text-anchor="middle" font-size="11" fill="#5A5A5A">长距离依赖，梯度衰减</text>
+
+        <!-- Step illustration -->
+        <rect x="28" y="240" width="120" height="40" rx="4" fill="none" stroke="#D0CCC5" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="88" y="258" text-anchor="middle" font-size="9.5" fill="#8A8A8A">第 3 步在等待 1、2 步</text>
+        <text x="88" y="272" text-anchor="middle" font-size="9.5" fill="#8A8A8A">前面的结果</text>
+
+        <!-- ===== Divider ===== -->
+        <line x1="180" y1="15" x2="180" y2="308" stroke="#D8D6D0" stroke-width="1" stroke-dasharray="5,5"/>
+
+        <!-- ===== Right Panel: Transformer ===== -->
+        <rect x="184" y="0" width="172" height="320" rx="8" fill="#F1F4F8"/>
+        <rect x="184" y="0" width="172" height="320" rx="8" fill="none" stroke="#C5D0DA" stroke-width="1"/>
+        <text x="270" y="30" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#2C3E50">Transformer</text>
+
+        <!-- 4 input positions -->
+        <circle cx="220" cy="62" r="13" fill="#D8E2ED" stroke="#52718C" stroke-width="2"/>
+        <text x="220" y="66" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">x₁</text>
+        <circle cx="254" cy="62" r="13" fill="#D8E2ED" stroke="#52718C" stroke-width="2"/>
+        <text x="254" y="66" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">x₂</text>
+        <circle cx="288" cy="62" r="13" fill="#D8E2ED" stroke="#52718C" stroke-width="2"/>
+        <text x="288" y="66" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">x₃</text>
+        <circle cx="322" cy="62" r="13" fill="#D8E2ED" stroke="#52718C" stroke-width="2"/>
+        <text x="322" y="66" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">x₄</text>
+
+        <!-- Attention matrix (5x5, all cells = all pairs connected) -->
+        <rect x="220" y="88" width="100" height="100" rx="5" fill="#FFFFFF" stroke="#B0C0D0" stroke-width="1.3"/>
+        <!-- Row 1 -->
+        <rect x="224" y="92" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.9"/>
+        <rect x="244" y="92" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="264" y="92" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <rect x="284" y="92" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.75"/>
+        <rect x="300" y="92" width="16" height="18" rx="3" fill="#2C3E50" opacity="0.7"/>
+        <!-- Row 2 -->
+        <rect x="224" y="112" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="244" y="112" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.9"/>
+        <rect x="264" y="112" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="284" y="112" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <rect x="300" y="112" width="16" height="18" rx="3" fill="#2C3E50" opacity="0.75"/>
+        <!-- Row 3 -->
+        <rect x="224" y="132" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <rect x="244" y="132" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="264" y="132" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.9"/>
+        <rect x="284" y="132" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="300" y="132" width="16" height="18" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <!-- Row 4 -->
+        <rect x="224" y="152" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.75"/>
+        <rect x="244" y="152" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <rect x="264" y="152" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="284" y="152" width="18" height="18" rx="3" fill="#2C3E50" opacity="0.9"/>
+        <rect x="300" y="152" width="16" height="18" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <!-- Row 5 -->
+        <rect x="224" y="172" width="18" height="16" rx="3" fill="#2C3E50" opacity="0.7"/>
+        <rect x="244" y="172" width="18" height="16" rx="3" fill="#2C3E50" opacity="0.75"/>
+        <rect x="264" y="172" width="18" height="16" rx="3" fill="#2C3E50" opacity="0.8"/>
+        <rect x="284" y="172" width="18" height="16" rx="3" fill="#2C3E50" opacity="0.85"/>
+        <rect x="300" y="172" width="16" height="16" rx="3" fill="#2C3E50" opacity="0.9"/>
+
+        <!-- Matrix labels -->
+        <text x="270" y="82" text-anchor="middle" font-size="9" fill="#7A8A9A">被关注的位置 →</text>
+        <text x="212" y="142" text-anchor="end" font-size="9" fill="#7A8A9A">← 查询</text>
+
+        <!-- Matrix caption -->
+        <text x="270" y="204" text-anchor="middle" font-size="10" fill="#2C3E50" font-weight="600">注意力矩阵</text>
+        <text x="270" y="218" text-anchor="middle" font-size="10" fill="#3A5A6A">每个格子 = 一对位置的直接关联</text>
+
+        <!-- Key points -->
+        <text x="270" y="246" text-anchor="middle" font-size="11" fill="#3A5A6A">全部位置同时计算</text>
+        <text x="270" y="270" text-anchor="middle" font-size="11" fill="#3A5A6A">路径复杂度 <tspan font-weight="700" fill="#2C3E50">O(1)</tspan></text>
+        <text x="270" y="294" text-anchor="middle" font-size="11" fill="#3A5A6A">全局依赖，直接捕获</text>
       </svg>
       <div class="diagram-caption">RNN 的顺序计算 vs. Transformer 的并行自注意力——这是 Transformer 一切优势的起点</div>
     </div>
@@ -394,58 +434,60 @@
 
     <!-- Diagram 2: Self-Attention -->
     <div class="diagram-wrapper" style="margin-top: 12px;">
-      <svg viewBox="0 0 320 175" xmlns="http://www.w3.org/2000/svg">
-        <!-- Q K V boxes at top -->
-        <rect x="35" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
-        <text x="65" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Query</text>
-
-        <rect x="130" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
-        <text x="160" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Key</text>
-
-        <rect x="225" y="5" width="60" height="26" rx="4" fill="#F0EDE6" stroke="#8B4513" stroke-width="1.2"/>
-        <text x="255" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#8B4513">Value</text>
-
-        <text x="65" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"我在找什么"</text>
-        <text x="160" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"我有什么"</text>
-        <text x="255" y="44" text-anchor="middle" font-size="9" fill="#8A8A8A">"实际内容"</text>
-
-        <!-- Arrow down from Q and K to MatMul -->
-        <line x1="65" y1="36" x2="65" y2="70" stroke="#8B4513" stroke-width="1.2"/>
-        <line x1="160" y1="36" x2="160" y2="70" stroke="#8B4513" stroke-width="1.2"/>
-        <line x1="255" y1="36" x2="255" y2="80" stroke="#8B4513" stroke-width="1.2"/>
-
-        <!-- MatMul box -->
-        <rect x="75" y="70" width="70" height="24" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="1"/>
-        <text x="110" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#2C3E50">Q·Kᵀ</text>
-
-        <!-- Scale -->
-        <line x1="110" y1="94" x2="110" y2="108" stroke="#2C3E50" stroke-width="1"/>
-        <rect x="78" y="108" width="64" height="20" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="0.8"/>
-        <text x="110" y="122" text-anchor="middle" font-size="9" fill="#2C3E50">÷√dₖ</text>
-
-        <!-- SoftMax -->
-        <line x1="110" y1="128" x2="110" y2="138" stroke="#2C3E50" stroke-width="1"/>
-        <rect x="78" y="138" width="64" height="20" rx="3" fill="#EDF0F5" stroke="#2C3E50" stroke-width="0.8"/>
-        <text x="110" y="152" text-anchor="middle" font-size="9" fill="#2C3E50">Softmax</text>
-
-        <!-- Arrow from V to multiply -->
-        <line x1="255" y1="80" x2="255" y2="140" stroke="#8B4513" stroke-width="1"/>
-        <line x1="255" y1="140" x2="195" y2="140" stroke="#8B4513" stroke-width="1"/>
-        <line x1="195" y1="140" x2="195" y2="158" stroke="#8B4513" stroke-width="1"/>
-
-        <!-- Arrow from Softmax to multiply -->
-        <line x1="142" y1="148" x2="175" y2="148" stroke="#2C3E50" stroke-width="1"/>
-        <line x1="175" y1="148" x2="175" y2="158" stroke="#2C3E50" stroke-width="1"/>
-
-        <!-- MatMul (weights × V) -->
-        <rect x="155" y="158" width="64" height="20" rx="3" fill="#D6E0EB" stroke="#2C3E50" stroke-width="1.2"/>
-        <text x="187" y="172" text-anchor="middle" font-size="9" font-weight="600" fill="#2C3E50">加权求和</text>
-
+      <svg viewBox="0 0 340 325" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <marker id="arrow-brown" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#8B4513"/>
+          <marker id="br" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,1 L8,5 L0,9 Z" fill="#8B4513"/>
+          </marker>
+          <marker id="bl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,1 L8,5 L0,9 Z" fill="#2C3E50"/>
           </marker>
         </defs>
+
+        <!-- ===== Q K V at top ===== -->
+        <rect x="30" y="8" width="78" height="28" rx="5" fill="#F5F0E8" stroke="#8B4513" stroke-width="1.8"/>
+        <text x="69" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="#8B4513">Query</text>
+
+        <rect x="126" y="8" width="78" height="28" rx="5" fill="#F5F0E8" stroke="#8B4513" stroke-width="1.8"/>
+        <text x="165" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="#8B4513">Key</text>
+
+        <rect x="248" y="8" width="68" height="28" rx="5" fill="#F5F0E8" stroke="#8B4513" stroke-width="1.8"/>
+        <text x="282" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="#8B4513">Value</text>
+
+        <!-- Q and K arrows down to step 1 -->
+        <line x1="69" y1="36" x2="69" y2="56" stroke="#8B4513" stroke-width="1.5"/>
+        <line x1="165" y1="36" x2="165" y2="56" stroke="#8B4513" stroke-width="1.5"/>
+
+        <!-- ===== Step 1: MatMul Q·K^T ===== -->
+        <rect x="40" y="58" width="160" height="44" rx="7" fill="#EDF0F5" stroke="#2C3E50" stroke-width="1.6"/>
+        <text x="120" y="79" text-anchor="middle" font-size="13" font-weight="700" fill="#2C3E50">Q · Kᵀ</text>
+        <text x="120" y="95" text-anchor="middle" font-size="10" fill="#5A6A7A">点积 → 计算位置间相似度</text>
+
+        <!-- Arrow -->
+        <line x1="120" y1="102" x2="120" y2="118" stroke="#2C3E50" stroke-width="1.5"/>
+
+        <!-- ===== Step 2: Scale ===== -->
+        <rect x="40" y="120" width="160" height="44" rx="7" fill="#EDF0F5" stroke="#2C3E50" stroke-width="1.4"/>
+        <text x="120" y="141" text-anchor="middle" font-size="13" font-weight="700" fill="#2C3E50">÷ √dₖ · 缩放</text>
+        <text x="120" y="157" text-anchor="middle" font-size="10" fill="#5A6A7A">防止数值过大导致梯度消失</text>
+
+        <!-- Arrow -->
+        <line x1="120" y1="164" x2="120" y2="180" stroke="#2C3E50" stroke-width="1.5"/>
+
+        <!-- ===== Step 3: Softmax ===== -->
+        <rect x="40" y="182" width="160" height="44" rx="7" fill="#EDF0F5" stroke="#2C3E50" stroke-width="1.4"/>
+        <text x="120" y="203" text-anchor="middle" font-size="13" font-weight="700" fill="#2C3E50">Softmax · 归一化</text>
+        <text x="120" y="219" text-anchor="middle" font-size="10" fill="#5A6A7A">转为概率分布 = 注意力权重</text>
+
+        <!-- Softmax output arrow down -->
+        <line x1="120" y1="226" x2="120" y2="248" stroke="#2C3E50" stroke-width="1.5"/>
+
+        <!-- V arrow straight down -->
+        <line x1="282" y1="36" x2="282" y2="248" stroke="#8B4513" stroke-width="1.5"/>
+
+        <!-- ===== Final: Weighted Sum ===== -->
+        <rect x="40" y="250" width="277" height="38" rx="7" fill="#D6E0EB" stroke="#2C3E50" stroke-width="2.2"/>
+        <text x="178" y="274" text-anchor="middle" font-size="12" font-weight="700" fill="#2C3E50">Σ (注意力权重 × Value) = 该位置的输出</text>
       </svg>
       <div class="diagram-caption">缩放点积注意力的计算流程：Q 与 K 匹配得到权重，加权 V 输出</div>
     </div>
