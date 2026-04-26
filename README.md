@@ -1,62 +1,74 @@
 # Paper Card
 
-把学术论文提炼为手机竖屏友好的精读长图，方便在学术圈传播。
+把学术论文整理成适合手机阅读和分享传播的图片内容。
 
-## 工作流程
+这个仓库的重点不是做一个“Agent 产品”，而是沉淀一套稳定的论文转译流程：从论文材料出发，经过提炼、结构化和视觉转译，最后输出长图和可交互界面。
 
+## 这个项目是什么
+
+- 输入：论文链接、PDF、标题、截图、笔记，或者模糊线索
+- 处理：确认论文、提炼重点、组织讲解顺序、生成文案与视觉页面
+- 输出：手机竖屏长图，以及对应的可交互 HTML 页面
+
+## 工作流
+
+```mermaid
+flowchart LR
+    A["论文材料"] --> B["确认论文与目标"]
+    B --> C["提炼重点"]
+    C --> D["组织内容结构"]
+    D --> E["生成视觉页面"]
+    E --> F["输出长图"]
+    E --> G["输出可交互界面"]
+    F --> H["人工审核与修改"]
+    G --> H
+    H --> E
 ```
-你提供材料 → 我搜索确认论文 → 我出初稿 → 你审核 → 定稿 → 生成 HTML → 截图出图
-```
 
-### 输入方式
+## 仓库怎么读
 
-- 论文链接 / PDF / DOI
-- 论文标题
-- 截图、文字片段、笔记（我来找到对应论文）
-- 模糊描述（我来搜索候选，与你确认）
+- `README.md`
+  仓库首页，说明项目目标、流程和目录结构
+- `docs/project-overview.md`
+  GitHub 友好的项目说明，适合快速理解这个项目如何工作
+- `papers/attention-is-all-you-need/draft.md`
+  某篇论文的内容初稿和讨论记录
+- `papers/attention-is-all-you-need/final.html`
+  最终的可交互页面
+- `case-study.html`
+  本地展示用的可视化 case 页面，不作为 GitHub 首页
 
-## 内容框架
+## 当前示例
 
-**必选模块：**
-1. **主标题区** — 自拟标题（引人思考、务实有洞察）+ 论文标签
-2. **为什么该关心** — 背景问题与动机
-3. **论文速览卡片** — 标题/作者/会议/链接
+当前仓库里的案例论文是 `Attention Is All You Need`。
 
-**弹性模块（按论文特点选用）：**
-4. **他们是怎么做的** — 方法 + 核心截图
-5. **结果怎么样** — 关键指标 + 发现
-6. **局限和启发** — 讨论与延伸
+![Attention Is All You Need preview](docs/assets/attention-is-all-you-need-preview.png)
 
-## 视觉规范
-
-| 项 | 值 |
-|---|---|
-| 基准宽度 | 390px（手机竖屏） |
-| 底色 | `#FAFAF8` 暖白 |
-| 强调色 | `#2C3E50` 深蓝灰 |
-| 点缀色 | `#8B4513` 暖棕 |
-| 正文字号 | 16px |
-| 标题字号 | 24px，衬线 |
-| 正文 | 无衬线，行高 1.7 |
-| 篇幅 | ≤6 页竖屏 |
-
-**风格：** 学术风、克制、无冗余装饰。不要标题党，不要 AI 味。
+- 初稿：[`draft.md`](papers/attention-is-all-you-need/draft.md)
+- 定稿页面：[`final.html`](papers/attention-is-all-you-need/final.html)
+- 项目说明：[`docs/project-overview.md`](docs/project-overview.md)
 
 ## 目录结构
 
-```
+```text
 paper-card/
-├── README.md            ← 本文件
-└── papers/              ← 每篇论文一个子目录
-    └── paper-name/
-        ├── draft.md     ← 初稿/讨论记录
-        ├── final.html   ← 定稿 HTML
-        └── final.png    ← 输出长图
+├── README.md
+├── docs/
+│   └── project-overview.md
+├── case-study.html
+└── papers/
+    └── attention-is-all-you-need/
+        ├── draft.md
+        ├── final.html
+        ├── page-1.png
+        ├── page-2.png
+        └── page-3.png
 ```
 
 ## 协作方式
 
-1. 你提供材料，我出初稿
-2. 你审核内容，我按反馈调整
-3. 定稿后我生成 HTML
-4. 你截长图分享
+1. 提供论文材料或线索。
+2. 确认目标受众和输出形式。
+3. 生成初稿并讨论修改。
+4. 定稿后生成 HTML 页面。
+5. 从页面输出分享图片。

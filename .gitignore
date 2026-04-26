@@ -3,3 +3,5 @@
 *.jpeg
 *.pdf
 .DS_Store
+!docs/assets/
+!docs/assets/*.png
